@@ -1,6 +1,11 @@
 package br.com.alura.agenda2;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -72,14 +77,52 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
 
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
+
+        MenuItem itemCall = menu.add("Ligar");
+
+        itemCall.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.CALL_PHONE)
+                 != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ListaAlunosActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE}, 123);
+                } else {
+                    Intent intentCall = new Intent(Intent.ACTION_CALL);
+                    intentCall.setData(Uri.parse("tel:" + aluno.getTelefone()));
+                    startActivity(intentCall);
+                }
+
+                return false;
+            }
+        });
+
+        MenuItem itemSMS = menu.add("Enviar SMS");
+        Intent intentSMS = new Intent(Intent.ACTION_VIEW);
+        intentSMS.setData(Uri.parse("sms:" + aluno.getTelefone()));
+        itemSMS.setIntent(intentSMS);
+
+        MenuItem itemMap = menu.add("Ver no mapa");
+        Intent intentMap = new Intent(Intent.ACTION_VIEW);
+        intentMap.setData(Uri.parse("geo:0,0?q=" + aluno.getEndereco()));
+        itemMap.setIntent(intentMap);
+
+        MenuItem itemSite = menu.add("Visitar site");
+        Intent intentSite = new Intent(Intent.ACTION_VIEW);
+        String site = aluno.getSite();
+        if (!site.startsWith("http://")) {
+            site = "http://" + aluno.getSite();
+        }
+        intentSite.setData(Uri.parse(site));
+        itemSite.setIntent(intentSite);
+
         MenuItem deletar = menu.add("Deletar");
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
-
                 AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
 
                 dao.deletar(aluno);
@@ -88,6 +131,15 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 123){
+            //faz alguma coisa. requestcode 123 é o id do request de call
+        }
 
     }
 }

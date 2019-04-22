@@ -18,10 +18,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="+"
-        android:textSize="40sp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/fundo"
+        android:background="@drawable/btn_add"
         android:elevation="6dp"
         android:stateListAnimator="@null"/>
 
