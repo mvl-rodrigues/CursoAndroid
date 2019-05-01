@@ -1,0 +1,24 @@
+{
+  "list": [
+    {
+      "alunos": [
+        {
+          "id": "1",
+          "nome": "Daniel",
+          "endereco": "rua um",
+          "telefone": "11112222",
+          "site": "www.google.com",
+          "nota": "8"
+        },
+        {
+          "id": "2",
+          "nome": "Jeferson",
+          "endereco": "rua doid",
+          "telefone": "11113333",
+          "site": "www.alura.com",
+          "nota": "9"
+        }
+      ]
+    }
+  ]
+}

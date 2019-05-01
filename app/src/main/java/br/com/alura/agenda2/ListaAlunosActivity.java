@@ -11,15 +11,18 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.alura.agenda2.adapter.AlunoAdapter;
+import br.com.alura.agenda2.converter.AlunoConverter;
 import br.com.alura.agenda2.dao.AlunoDAO;
 import br.com.alura.agenda2.model.Aluno;
 
@@ -61,6 +64,24 @@ public class ListaAlunosActivity extends AppCompatActivity {
         }
 
         registerForContextMenu(listaAlunos);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lista_alunos, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_enviar_notas:
+                new EnviarAlunosTask(this).execute();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     private void carregaLista() {
